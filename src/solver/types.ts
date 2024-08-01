@@ -1,7 +1,7 @@
 import { Tile, Position, Group } from '../types';
 
 export type PartialTile = Tile & {
-    options?: Set<number>
+    options?: number[]
     group: Group
 }
 

@@ -5,4 +5,6 @@ import solve from './solver'
 console.log('Hello, Suguru!')
 
 const solution = solve(EX1.problem)
-visualise(solution)
+
+if (solution !== undefined) visualise(solution)
+else console.log('Failed to solve!')

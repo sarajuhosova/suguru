@@ -4,18 +4,23 @@ import { Position, Solution, Group, Problem, Tile } from "../types"
 import { PartialSolution, PartialTile } from "./types"
 
 
-function calculateOptions(position: Position, solution: Solution, group: Group): Set<number> | undefined {
+function calculateOptions(position: Position, solution: Solution, group: Group): number[] | undefined {
     if (solution[position.row][position.column].entry !== undefined) return undefined
 
     const surrounding = getSurroundingEntries(position, solution)
     const inGroup = group.map(t => solution[t.row][t.column].entry)
         .filter(e => e !== undefined)
 
-    const options = new Set<number>
-    for (var i = 1; i <= group.length + 1; i++) {
-        if (!surrounding.has(i) && !inGroup.includes(i)) options.add(i)
+    const options: number[] = []
+    for (var i = 1; i <= group.length + 2; i++) {
+        if (!surrounding.includes(i) 
+            && !inGroup.includes(i)
+            // if it's not already included 
+            && !options.includes(i)
+        ) options.push(i)
     }
 
+    // TODO: shuffle these
     return options
 }
 
@@ -28,6 +33,7 @@ function convert(solution: Solution, groups: Group[]): PartialTile[][] {
         for (var column = 0; column < solution[0].length; column++) {
             const position: Position = { row, column }
             const group: Group = findGroup(position, groups)!
+                .filter(({ row: i, column: j }) => i !== row && j !== column)
 
             next.push({
                 ...solution[row][column],
