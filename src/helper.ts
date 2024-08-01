@@ -1,13 +1,15 @@
+import { Entry, Solution } from "./types"
+
 export function max(arr: number[]): number {
     return Math.max(...arr)
 }
 
-export function generateGrid(width: number, length: number): string[][] {
-    const result: string[][] = []
+export function generateSolution(length: number, width: number): Solution {
+    const result: Solution = []
     for (var i = 0; i < length; i++) {
-        const row: string[] = []
+        const row: Entry[] = []
         for (var j = 0; j < width; j++) {
-            row.push("")
+            row.push('empty')
         }
         result.push(row)
     }

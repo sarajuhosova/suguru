@@ -1,10 +1,15 @@
-export type Position = [number, number]
+export type Row = number
+export type Column = number
 
-export type Tile = {
-    position: Position
-    value: number
-    revealed: boolean
-    preset: boolean
+export type Position = [Row, Column]
+
+export type Board = Position[][]
+
+export type Problem = {
+    board: Board
+    definition: Record<Row, Record<Column, number>>
 }
 
-export type Board<T> = T[][]
+export type Entry = number | 'empty'
+
+export type Solution = Entry[][]

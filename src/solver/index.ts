@@ -1,5 +1,5 @@
-import { Board, Tile, Position } from "../types";
+import { Problem, Solution } from "../types";
 
-function solve(board: Board<Position>): Board<Tile> {
+function solve(problem: Problem): Solution {
     return []
 }
