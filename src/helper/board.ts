@@ -14,25 +14,25 @@ function equalPosition(first: Position, second: Position): boolean {
     return first.row === second.row && first.column === second.column
 }
 
-function above(position: Position): Position {
+export function north(position: Position): Position {
     return { row: position.row - 1, column: position.column}
 }
 
-function left(position: Position): Position {
+export function west(position: Position): Position {
     return { row: position.row, column: position.column - 1}
 }
 
-function below(position: Position): Position {
+export function south(position: Position): Position {
     return { row: position.row + 1, column: position.column}
 }
 
-function right(position: Position): Position {
+export function east(position: Position): Position {
     return { row: position.row, column: position.column + 1}
 }
 
 // GROUP ----------------------------------------------
 
-function findGroup(position: Position, groups: Group[]): Group | undefined {
+export function findGroup(position: Position, groups: Group[]): Group | undefined {
     for (const group of groups) {
         if (group.some(p => equalPosition(position, p))) return group
     }
@@ -53,9 +53,9 @@ export function fromSameGroup(
 export function calculateFrame(position: Position, groups: Group[]): Frame {
     const [length, width] = calculateDimensions(groups)
     return {
-        up:    position.row === 0            || !fromSameGroup(position, above(position), groups),
-        left:  position.column === 0         || !fromSameGroup(position, left(position), groups),
-        down:  position.row === length - 1   || !fromSameGroup(position, below(position), groups),
-        right: position.column === width - 1 || !fromSameGroup(position, right(position), groups)
+        up:    position.row === 0            || !fromSameGroup(position, north(position), groups),
+        left:  position.column === 0         || !fromSameGroup(position, west(position), groups),
+        down:  position.row === length - 1   || !fromSameGroup(position, south(position), groups),
+        right: position.column === width - 1 || !fromSameGroup(position, east(position), groups)
     }
 }

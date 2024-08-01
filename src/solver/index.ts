@@ -1,29 +1,9 @@
-import { calculateDimensions, calculateFrame } from '../helper/board';
-import { Tile, Problem, Solution } from '../types';
+import { Problem, Solution } from '../types';
+import fromProblem from './preprocessor';
 
-function fromProblem(
-    problem: Problem
-): Solution {
-    const [length, width] = calculateDimensions(problem.groups)
+export default function solve(problem: Problem): Solution {
+    const partialSolution = fromProblem(problem)
 
-    const result: Solution = []
-    for (var row = 0; row < length; row++) {
-        const tiles: Tile[] = []
-        for (var column = 0; column < width; column++) {
-            const entry = problem.definition[row]?.[column]
-            tiles.push({
-                frame: calculateFrame({ row, column }, problem.groups),
-                entry,
-                defined: entry !== undefined
-            })
-        }
-        result.push(tiles)
-    }
-    return result
+    return partialSolution.tiles
 }
 
-export function solve(problem: Problem): Solution {
-    const solution = fromProblem(problem)
-
-    return solution
-}
