@@ -38,15 +38,15 @@ export function east(position: Position): Position {
 }
 
 export function getSurroundingPositions(position: Position, length: number, width: number): Position[] {
-    const minRow = Math.max(position.row - 1, 0)      // incl
-    const maxRow = Math.min(position.row + 1, length) // excl
-    const minCol = Math.max(position.column - 1, 0)      // incl
-    const maxCol = Math.min(position.column + 1, length) // excl
+    const minRow = Math.max(position.row - 1, 0)
+    const maxRow = Math.min(position.row + 1, length - 1)
+    const minCol = Math.max(position.column - 1, 0)
+    const maxCol = Math.min(position.column + 1, width - 1)
     
     const surrounding: Position[] = []
 
-    for (var row = minRow; row < maxRow; row++) {
-        for (var column = minCol; column < maxCol; column++) {
+    for (var row = minRow; row <= maxRow; row++) {
+        for (var column = minCol; column <= maxCol; column++) {
             if (!(row === position.row && column === position.column)) {
                 surrounding.push({ row, column })
             }

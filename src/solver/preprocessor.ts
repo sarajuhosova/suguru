@@ -12,7 +12,7 @@ function calculateOptions(position: Position, solution: Solution, group: Group):
         .filter(e => e !== undefined)
 
     const options: number[] = []
-    for (var i = 1; i <= group.length + 2; i++) {
+    for (var i = 1; i <= group.length + 1; i++) {
         if (!surrounding.includes(i) 
             && !inGroup.includes(i)
             // if it's not already included 
@@ -33,7 +33,7 @@ function convert(solution: Solution, groups: Group[]): PartialTile[][] {
         for (var column = 0; column < solution[0].length; column++) {
             const position: Position = { row, column }
             const group: Group = findGroup(position, groups)!
-                .filter(({ row: i, column: j }) => i !== row && j !== column)
+                .filter(({ row: i, column: j }) => !(i === row && j === column))
 
             next.push({
                 ...solution[row][column],
