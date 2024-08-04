@@ -1,59 +1,61 @@
-import { getSurroundingPositions, unify } from '../helper/board';
+import { findByPosition, getByPosition, getSurroundingPositions, sortByValue, unify, updateEntry } from '../helper/position';
+import { compareListsBySize } from '../helper/util';
 import { Problem, Solution } from '../types';
 import fromProblem from './preprocessor';
-import { PartialSolution, PartialTile } from './types';
+import { PartialSolution } from './types';
 
 function solveImpl(solution: PartialSolution): boolean {
     if (solution.remaining.length < 1) return true
-
-    for (const next of solution.remaining) {
-        const tile: PartialTile = solution.tiles[next.row][next.column]
-
-        const options = tile.options
-        if (!options || options.length < 1) {
-            continue
-        }
-        
-        const pick: number = options!.pop()!
     
-        // update the entry
-        tile.entry = pick
-        tile.options = undefined
-        // get all the related
-        const affected = unify(
-            getSurroundingPositions(next, solution.tiles.length, solution.tiles[0].length),
-            tile.group
-        ).filter(({ row, column }) => solution.tiles[row][column].options?.includes(pick))
+    sortByValue(solution.remaining, compareListsBySize)
+
+    for (var i = 0; i < solution.remaining.length; i++) {
+        const { key: position, value: options } = solution.remaining.pop()!
+
+        if (options.length < 0) continue
+
+        const tile = getByPosition(position, solution.tiles)
+        for (const pick of options) {
+            // find the tiles that should be updated
+            const affected = unify(
+                getSurroundingPositions(position, solution.tiles.length, solution.tiles[0].length),
+                tile.group
+            ).filter(p => findByPosition(p, solution.remaining)?.includes(pick) )
+
+            // update everything
+            tile.entry = pick
+            for (const p of affected) {
+                const current = findByPosition(p, solution.remaining)!
+                    .filter(opt => opt !== pick)
+                updateEntry(position, current, solution.remaining)
+            }
+
+            // attempt more solutions
+            if (solveImpl(solution)) {
+                return true
+            }
+
+            // undo everything
+            tile.entry = undefined
+            for (const p of affected) {
+                const current = findByPosition(p, solution.remaining)!
+                current.push(pick)
+                updateEntry(position, current, solution.remaining)
+            }
+        }
 
 
-        for (const { row, column } of affected) {
-            solution.tiles[row][column].options!.filter((value => value !== pick))
-        }
-        
-        if (solveImpl(solution)) {
-            return true
-        }
-
-        // undo everything
-        tile.entry = undefined
-        tile.options = options
-        for (const { row, column } of affected) {
-            solution.tiles[row][column].options!.push(pick)
-        }
+        // add it to the front of the list such that
+        // it doesn't get popped in the next iteration
+        solution.remaining.unshift({ key: position, value: options })
     }
 
-    return false
+
+    return true
 }
 
 export default function solve(problem: Problem): Solution | undefined {
     const partialSolution = fromProblem(problem)
-
-    for (const row of partialSolution.tiles) {
-        for (const tile of row) {
-            console.log(tile.options)
-        }
-        console.log()
-    }
 
     return (solveImpl(partialSolution)) ? partialSolution.tiles : undefined
 }

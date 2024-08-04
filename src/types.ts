@@ -6,6 +6,13 @@ export type Position = {
     column: Column
 }
 
+export type PositionEntry<T>  = {
+    key: Position
+    value: T
+}
+
+export type PositionMap<T> = PositionEntry<T>[]
+
 // BOARD ----------------------------------------------
 
 export type Group = Position[]
@@ -21,7 +28,7 @@ export type Board = Frame[][]
 
 // PROBLEM --------------------------------------------
 
-export type Definition = Record<Row, Record<Column, number>>
+export type Definition = PositionMap<number>
 
 export type Problem = {
     groups: Group[]

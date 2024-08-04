@@ -1,14 +1,46 @@
 import { calculateDimensions, calculateFrame, findGroup } from "../helper/board"
+import { findByPosition, getByPosition } from "../helper/position"
 import { getSurroundingEntries } from "../helper/tile"
-import { Position, Solution, Group, Problem, Tile } from "../types"
+import { Position, Group, Problem, PositionMap } from "../types"
 import { PartialSolution, PartialTile } from "./types"
 
+type PartialTiles = PartialTile[][]
 
-function calculateOptions(position: Position, solution: Solution, group: Group): number[] | undefined {
-    if (solution[position.row][position.column].entry !== undefined) return undefined
+function calculateTiles(problem: Problem): PartialTiles {
+    const [length, width] = calculateDimensions(problem.groups)
 
-    const surrounding = getSurroundingEntries(position, solution)
-    const inGroup = group.map(t => solution[t.row][t.column].entry)
+    const solution: PartialTiles = []
+    for (var row = 0; row < length; row++) {
+        const tiles: PartialTile[] = []
+
+        for (var column = 0; column < width; column++) {
+            const position = { row, column }
+            const entry = findByPosition(position, problem.definition)
+
+            // get the other positions in this tile's group
+            const group = findGroup(position, problem.groups)!
+                .filter(({ row: i, column: j }) => !(i === row && j === column))
+
+            // add the tile
+            tiles.push({
+                frame: calculateFrame(position, problem.groups),
+                entry,
+                defined: entry !== undefined,
+                group
+            })
+        }
+
+        solution.push(tiles)
+    }
+
+    return solution
+}
+
+function calculateOptions(position: Position, tiles: PartialTiles, group: Group): number[] | undefined {
+    if (getByPosition(position, tiles).entry !== undefined) return undefined
+
+    const surrounding = getSurroundingEntries(position, tiles)
+    const inGroup = group.map(p => getByPosition(p, tiles).entry)
         .filter(e => e !== undefined)
 
     const options: number[] = []
@@ -24,56 +56,25 @@ function calculateOptions(position: Position, solution: Solution, group: Group):
     return options
 }
 
-function convert(solution: Solution, groups: Group[]): PartialTile[][] {
-    const tiles: PartialTile[][] = []
-
-    for (var row = 0; row < solution.length; row++) {
-        const next: PartialTile[] = []
-
-        for (var column = 0; column < solution[0].length; column++) {
-            const position: Position = { row, column }
-            const group: Group = findGroup(position, groups)!
-                .filter(({ row: i, column: j }) => !(i === row && j === column))
-
-            next.push({
-                ...solution[row][column],
-                options: calculateOptions(position, solution, group),
-                group
-            })
+function calculateRemaining(tiles: PartialTiles): PositionMap<number[]> {
+    const remaining: PositionMap<number[]> = []
+    for (var row = 0; row < tiles.length; row++) {
+        for (var column = 0; column < tiles[0].length; column++) {
+            const position = { row, column }
+            const tile = getByPosition(position, tiles)
+            if (!tile.entry) {
+                const value = calculateOptions(position, tiles, tile.group) ?? []
+                remaining.push({ key: position, value } )
+            }
         }
-
-        tiles.push(next)
     }
 
-    return tiles
+    return remaining
 }
 
 export default function fromProblem(problem: Problem): PartialSolution {
-    const [length, width] = calculateDimensions(problem.groups)
+    const tiles = calculateTiles(problem)
+    const remaining: PositionMap<number[]> = calculateRemaining(tiles)
 
-    const solution: Solution = []
-    const remaining: Position[] = []
-
-    for (var row = 0; row < length; row++) {
-        const tiles: Tile[] = []
-
-        for (var column = 0; column < width; column++) {
-            const entry = problem.definition[row]?.[column]
-            const position = { row, column }
-
-            // add the tile
-            tiles.push({
-                frame: calculateFrame(position, problem.groups),
-                entry,
-                defined: entry !== undefined
-            })
-
-            // add the leftover
-            if (!entry) remaining.push(position)
-        }
-
-        solution.push(tiles)
-    }
-
-    return { tiles: convert(solution, problem.groups), remaining }
+    return { tiles, remaining }
 }

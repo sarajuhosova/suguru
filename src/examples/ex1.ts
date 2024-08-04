@@ -1,3 +1,4 @@
+import { positionEntry } from '../helper/position';
 import { Definition, Group, Problem } from '../types';
 
 /*
@@ -12,10 +13,14 @@ const groups: Group[] = [
     [{ row: 0, column: 4 }, { row: 1, column: 4 }],
 ]
 
-const definition: Definition = {
-    0: { 0: 3, 2: 6, 4: 2 },
-    1: { 3: 5 },
-    3: { 0: 1, 2: 2, 3: 3 },
-}
+const definition: Definition = [
+    positionEntry(0, 0, 3),
+    positionEntry(0, 2, 6),
+    positionEntry(0, 4, 2),
+    positionEntry(1, 3, 5),
+    positionEntry(3, 0, 1),
+    positionEntry(3, 2, 2),
+    positionEntry(3, 3, 3)
+]
 
 export const problem: Problem = { groups, definition }

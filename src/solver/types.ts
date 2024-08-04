@@ -1,11 +1,8 @@
-import { Tile, Position, Group } from '../types';
+import { Tile, Group, PositionMap } from '../types';
 
-export type PartialTile = Tile & {
-    options?: number[]
-    group: Group
-}
+export type PartialTile = Tile & { group: Group }
 
 export type PartialSolution = {
     tiles: PartialTile[][]
-    remaining: Position[]
+    remaining: PositionMap<number[]>
 }
