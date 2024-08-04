@@ -54,11 +54,15 @@ export function positionEntry<T>(row: number, column: number, value: T): Positio
     return { key: { row, column }, value }
 }
 
-export function findByPosition<T>(position: Position, map: PositionMap<T>): T | undefined {
-    for (const { key, value } of map) {
-        if (equalPosition(position, key)) return value
+export function getEntry<T>(position: Position, map: PositionMap<T>): PositionEntry<T> | undefined {
+    for (const entry of map) {
+        if (equalPosition(position, entry.key)) return entry
     }
     return undefined
+}
+
+export function findByPosition<T>(position: Position, map: PositionMap<T>): T | undefined {
+    return getEntry(position, map)?.value
 }
 
 export function updateEntry<T>(position: Position, value: T, map: PositionMap<T>) {

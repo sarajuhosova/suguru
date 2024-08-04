@@ -1,4 +1,4 @@
-import { findByPosition, getByPosition, getSurroundingPositions, sortByValue, unify, updateEntry } from '../helper/position';
+import { getByPosition, getEntry, getSurroundingPositions, sortByValue, unify, updateEntry } from '../helper/position';
 import { compareListsBySize } from '../helper/util';
 import { Problem, Solution } from '../types';
 import fromProblem from './preprocessor';
@@ -15,34 +15,42 @@ function solveImpl(solution: PartialSolution): boolean {
         if (options.length < 0) continue
 
         const tile = getByPosition(position, solution.tiles)
+
+        const surrounding = unify(
+            getSurroundingPositions(position, solution.tiles.length, solution.tiles[0].length),
+            tile.group
+        ).map(p => getEntry(p, solution.remaining))
+            .filter(entry => entry !== undefined)
+            .map(entry => entry!)
+
         for (const pick of options) {
             // find the tiles that should be updated
-            const affected = unify(
-                getSurroundingPositions(position, solution.tiles.length, solution.tiles[0].length),
-                tile.group
-            ).filter(p => findByPosition(p, solution.remaining)?.includes(pick) )
+            const affected = surrounding.filter(entry => entry.value.includes(pick))
+
+            // if this is the only option for some affected value
+            // this is not a potential solution path
+            if (affected.some(({ value }) => value.length < 2)) continue
 
             // update everything
             tile.entry = pick
-            for (const affectedPosition of affected) {
-                const newOptions = findByPosition(affectedPosition, solution.remaining)!
-                    .filter(opt => opt !== pick)
-                updateEntry(affectedPosition, newOptions, solution.remaining)
+            for (const entry of affected) {
+                const newOptions = entry.value.filter(opt => opt !== pick)
+                updateEntry(entry.key, newOptions, solution.remaining)
             }
 
-            // attempt more solutions
+            // attempt to solve further
             if (solveImpl(solution)) {
                 return true
             }
 
-            // undo everything
-            tile.entry = undefined
-            for (const affectedPosition of affected) {
-                const oldOptions = findByPosition(affectedPosition, solution.remaining)!
-                oldOptions.push(pick)
-                updateEntry(affectedPosition, oldOptions, solution.remaining)
+            // undo affected
+            for (const entry of affected) {
+                updateEntry(entry.key, entry.value, solution.remaining)
             }
         }
+
+        // set entry back to undefined
+        tile.entry = undefined
 
         // add it to the back of the list such that
         // it doesn't get shift in the next iteration
