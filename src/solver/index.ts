@@ -10,7 +10,7 @@ function solveImpl(solution: PartialSolution): boolean {
     sortByValue(solution.remaining, compareListsBySize)
 
     for (var i = 0; i < solution.remaining.length; i++) {
-        const { key: position, value: options } = solution.remaining.pop()!
+        const { key: position, value: options } = solution.remaining.shift()!
 
         if (options.length < 0) continue
 
@@ -24,10 +24,10 @@ function solveImpl(solution: PartialSolution): boolean {
 
             // update everything
             tile.entry = pick
-            for (const p of affected) {
-                const current = findByPosition(p, solution.remaining)!
+            for (const affectedPosition of affected) {
+                const newOptions = findByPosition(affectedPosition, solution.remaining)!
                     .filter(opt => opt !== pick)
-                updateEntry(position, current, solution.remaining)
+                updateEntry(affectedPosition, newOptions, solution.remaining)
             }
 
             // attempt more solutions
@@ -37,21 +37,19 @@ function solveImpl(solution: PartialSolution): boolean {
 
             // undo everything
             tile.entry = undefined
-            for (const p of affected) {
-                const current = findByPosition(p, solution.remaining)!
-                current.push(pick)
-                updateEntry(position, current, solution.remaining)
+            for (const affectedPosition of affected) {
+                const oldOptions = findByPosition(affectedPosition, solution.remaining)!
+                oldOptions.push(pick)
+                updateEntry(affectedPosition, oldOptions, solution.remaining)
             }
         }
 
-
-        // add it to the front of the list such that
-        // it doesn't get popped in the next iteration
-        solution.remaining.unshift({ key: position, value: options })
+        // add it to the back of the list such that
+        // it doesn't get shift in the next iteration
+        solution.remaining.push({ key: position, value: options })
     }
 
-
-    return true
+    return false
 }
 
 export default function solve(problem: Problem): Solution | undefined {
