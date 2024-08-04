@@ -1,6 +1,7 @@
 import visualise from './visualise'
 import * as TINY from './examples/tiny'
 import * as BASIC from './examples/basic'
+import * as DIFFICULT from './examples/difficult'
 import solve from './solver'
 import { Problem } from './types'
 
@@ -18,3 +19,7 @@ puzzle(TINY.problem)
 console.log()
 
 puzzle(BASIC.problem)
+
+console.log()
+
+puzzle(DIFFICULT.problem)
