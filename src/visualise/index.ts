@@ -1,7 +1,7 @@
 import {  Solution } from '../types'
 
 export default function visualise(solution: Solution) {
-    console.log('+' + solution.map(_ => '---').join('+') + '+---+')
+    console.log('+' + solution[0].map(_ => '---').join('+') + '+')
 
     for (const row of solution) {
         let data = '|'
