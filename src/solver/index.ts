@@ -9,53 +9,51 @@ function solveImpl(solution: PartialSolution): boolean {
     
     sortByValue(solution.remaining, compareListsBySize)
 
-    for (var i = 0; i < solution.remaining.length; i++) {
-        const { key: position, value: options } = solution.remaining.shift()!
+    const { key: position, value: options } = solution.remaining.shift()!
 
-        if (options.length < 0) continue
+    if (options.length < 0) return false
 
-        const tile = getByPosition(position, solution.tiles)
+    const tile = getByPosition(position, solution.tiles)
 
-        const surrounding = unify(
-            getSurroundingPositions(position, solution.tiles.length, solution.tiles[0].length),
-            tile.group
-        ).map(p => getEntry(p, solution.remaining))
-            .filter(entry => entry !== undefined)
-            .map(entry => entry!)
+    const surrounding = unify(
+        getSurroundingPositions(position, solution.tiles.length, solution.tiles[0].length),
+        tile.group
+    ).map(p => getEntry(p, solution.remaining))
+        .filter(entry => entry !== undefined)
+        .map(entry => entry!)
 
-        for (const pick of options) {
-            // find the tiles that should be updated
-            const affected = surrounding.filter(entry => entry.value.includes(pick))
+    for (const pick of options) {
+        // find the tiles that should be updated
+        const affected = surrounding.filter(entry => entry.value.includes(pick))
 
-            // if this is the only option for some affected value
-            // this is not a potential solution path
-            if (affected.some(({ value }) => value.length < 2)) continue
+        // if this is the only option for some affected value
+        // this is not a potential solution path
+        if (affected.some(({ value }) => value.length < 2)) continue
 
-            // update everything
-            tile.entry = pick
-            for (const entry of affected) {
-                const newOptions = entry.value.filter(opt => opt !== pick)
-                updateEntry(entry.key, newOptions, solution.remaining)
-            }
-
-            // attempt to solve further
-            if (solveImpl(solution)) {
-                return true
-            }
-
-            // undo affected
-            for (const entry of affected) {
-                updateEntry(entry.key, entry.value, solution.remaining)
-            }
+        // update everything
+        tile.entry = pick
+        for (const entry of affected) {
+            const newOptions = entry.value.filter(opt => opt !== pick)
+            updateEntry(entry.key, newOptions, solution.remaining)
         }
 
-        // set entry back to undefined
-        tile.entry = undefined
+        // attempt to solve further
+        if (solveImpl(solution)) {
+            return true
+        }
 
-        // add it to the back of the list such that
-        // it doesn't get shift in the next iteration
-        solution.remaining.push({ key: position, value: options })
+        // undo affected
+        for (const entry of affected) {
+            updateEntry(entry.key, entry.value, solution.remaining)
+        }
     }
+
+    // set entry back to undefined
+    tile.entry = undefined
+
+    // add it to the back of the list such that
+    // it doesn't get shift in the next iteration
+    solution.remaining.push({ key: position, value: options })
 
     return false
 }
