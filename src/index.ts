@@ -4,6 +4,8 @@ import visualise from './visualise'
 
 console.log('Hello, Suguru!')
 
-const problem = generate(4, 5)
+const { problem, solution} = generate(4, 5)
 
 visualise(fromProblem(problem).tiles)
+console.log()
+visualise(solution)

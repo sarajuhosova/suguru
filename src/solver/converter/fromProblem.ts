@@ -1,6 +1,7 @@
 import { calculateDimensions, calculateFrame, findGroup } from "../../helper/board"
 import { findByPosition, getByPosition } from "../../helper/position"
 import { getSurroundingEntries } from "../../helper/tile"
+import { shuffle } from "../../helper/util"
 import { Position, Group, Problem, PositionMap } from "../../types"
 import { PartialSolution, PartialTile } from "../types"
 
@@ -52,7 +53,7 @@ function calculateOptions(position: Position, tiles: PartialTiles, group: Group)
         ) options.push(i)
     }
 
-    // TODO: shuffle these
+    shuffle(options)
     return options
 }
 

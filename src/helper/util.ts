@@ -24,3 +24,10 @@ export function contains<T>(
 ): boolean {
     return list.some(e => equalFn(element, e))
 }
+
+/**
+ * https://www.freecodecamp.org/news/how-to-shuffle-an-array-of-items-using-javascript-or-typescript/
+ */
+export function shuffle<T>(list: T[]) { 
+    list.sort(() => Math.random() - 0.5)
+}
