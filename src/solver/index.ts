@@ -4,63 +4,72 @@ import { Problem, Solution } from '../types';
 import fromProblem from './preprocessor';
 import { PartialSolution } from './types';
 
-function solveImpl(solution: PartialSolution): boolean {
-    if (solution.remaining.length < 1) return true
+function solveImpl(solution: PartialSolution, count: boolean = false): number {
+    if (solution.remaining.length < 1) return 1
     
     sortByValue(solution.remaining, compareListsBySize)
 
     const { key: position, value: options } = solution.remaining.shift()!
 
-    if (options.length < 0) return false
+    var solutions = 0
+    
+    if (options.length > 0) {
+        const tile = getByPosition(position, solution.tiles)
 
-    const tile = getByPosition(position, solution.tiles)
+        const surrounding = unify(
+            getSurroundingPositions(position, solution.tiles.length, solution.tiles[0].length),
+            tile.group
+        ).map(p => getEntry(p, solution.remaining))
+            .filter(entry => entry !== undefined)
+            .map(entry => entry!)
 
-    const surrounding = unify(
-        getSurroundingPositions(position, solution.tiles.length, solution.tiles[0].length),
-        tile.group
-    ).map(p => getEntry(p, solution.remaining))
-        .filter(entry => entry !== undefined)
-        .map(entry => entry!)
+        for (const pick of options) {
+            // find the tiles that should be updated
+            const affected = surrounding.filter(entry => entry.value.includes(pick))
 
-    for (const pick of options) {
-        // find the tiles that should be updated
-        const affected = surrounding.filter(entry => entry.value.includes(pick))
+            // if this is the only option for some affected value
+            // this is not a potential solution path
+            if (affected.some(({ value }) => value.length < 2)) continue
 
-        // if this is the only option for some affected value
-        // this is not a potential solution path
-        if (affected.some(({ value }) => value.length < 2)) continue
+            // update everything
+            tile.entry = pick
+            for (const entry of affected) {
+                const newOptions = entry.value.filter(opt => opt !== pick)
+                updateEntry(entry.key, newOptions, solution.remaining)
+            }
 
-        // update everything
-        tile.entry = pick
-        for (const entry of affected) {
-            const newOptions = entry.value.filter(opt => opt !== pick)
-            updateEntry(entry.key, newOptions, solution.remaining)
+            // attempt to solve further
+            const subSolutions = solveImpl(solution, count)
+            if (subSolutions > 0) {
+                if (!count) {
+                    return 1
+                }
+                solutions += subSolutions
+            }
+
+            // undo affected
+            for (const entry of affected) {
+                updateEntry(entry.key, entry.value, solution.remaining)
+            }
         }
 
-        // attempt to solve further
-        if (solveImpl(solution)) {
-            return true
-        }
-
-        // undo affected
-        for (const entry of affected) {
-            updateEntry(entry.key, entry.value, solution.remaining)
-        }
+        // set entry back to undefined
+        tile.entry = undefined
     }
 
-    // set entry back to undefined
-    tile.entry = undefined
+    solution.remaining.unshift({ key: position, value: options })
 
-    // add it to the back of the list such that
-    // it doesn't get shift in the next iteration
-    solution.remaining.push({ key: position, value: options })
+    return solutions
+}
 
-    return false
+export function countSolutions(problem: Problem): number {
+    return solveImpl(fromProblem(problem), true)
 }
 
 export default function solve(problem: Problem): Solution | undefined {
     const partialSolution = fromProblem(problem)
 
-    return (solveImpl(partialSolution)) ? partialSolution.tiles : undefined
-}
+    const solution = solveImpl(partialSolution)
 
+    return (solution > 0) ? partialSolution.tiles : undefined
+}
