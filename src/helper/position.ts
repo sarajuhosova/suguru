@@ -84,6 +84,25 @@ export function sortByValue<T>(
     map.sort(({ value: left }, { value: right }) => comparator(left, right))
 }
 
+export function subsetPositionMap<T>(sub: PositionMap<T>, sup: PositionMap<T>): boolean {
+    for (const { key, value } of sub) {
+        const rightValue = findByPosition(key, sup)
+        if (!rightValue || rightValue !== value) return false
+    }
+
+    return true
+}
+
+export function deepCopyPositionMap<T>(
+    positionMap: PositionMap<T>,
+    deepCopy: (value: T) => T
+): PositionMap<T> {
+    return positionMap.map(
+        ({ key: { row, column}, value }) => 
+            { return { key: { row, column }, value: deepCopy(value) } }
+    )
+}
+
 // OTHER ----------------------------------------------
 
 export function getByPosition<T>(position: Position, grid: T[][]): T {

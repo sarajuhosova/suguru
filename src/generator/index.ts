@@ -1,14 +1,14 @@
-import { Definition, Group, Problem } from "../types";
-
-function generateBoard(length: number, width: number): Group[] {
-    return []
-}
-
-function generateDefinition(groups: Group[]): Definition {
-    return []
-}
+import { Problem } from "../types";
+import generateBoard from "./board";
+import generateDefinition from "./definition";
 
 export default function generate(length: number, width: number): Problem {
-    const groups = generateBoard(length, width)
-    return { groups, definition: generateDefinition(groups) }
+    var definition = undefined
+    var groups = undefined
+    while (!definition) {
+        groups = generateBoard(length, width)
+        definition = generateDefinition(groups)
+    }
+
+    return { groups: groups!, definition }
 }
