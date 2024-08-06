@@ -1,7 +1,7 @@
 import { getByPosition, getEntry, getSurroundingPositions, sortByValue, unify, updateEntry } from '../helper/position';
 import { compareListsBySize } from '../helper/util';
 import { Problem, Solution } from '../types';
-import fromProblem from './preprocessor';
+import fromProblem from './converter/converter';
 import { PartialSolution } from './types';
 
 function solveImpl(solution: PartialSolution, count: boolean = false): number {
