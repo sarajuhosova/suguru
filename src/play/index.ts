@@ -1,13 +1,15 @@
-import { Game, Solution } from "../types";
+import { Game } from "../types";
 import onKeyDown from "./operation/onKeyDown";
 import render from "./operation/render";
-
-let solution: Solution | undefined = undefined
+import { setSolution } from "./solution";
 
 export default function play(game: Game) {
-    solution = game.solution
+    // set the solution to a new state
+    setSolution(game.solution)
 
+    // render the starting board
     render(game.start)
 
+    // make sure the keys start moving the board around
     document.onkeydown = onKeyDown
 }

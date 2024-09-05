@@ -1,8 +1,10 @@
 import { Classes } from "../constants"
-import { getSelectedTile } from "./getters"
+import { getSelectedTile } from "../getters"
 
 function onArrowKey(direction: string) {
     const selected = getSelectedTile()
+
+    if (!selected) return
 
     const parent = selected.parentElement as HTMLTableRowElement
     let next: Element | null = null
@@ -18,14 +20,35 @@ function onArrowKey(direction: string) {
         if (!next) {
             next = parent.lastElementChild!
         }
-    } else return
+    } else {
+        const index = selected.cellIndex
 
-    selected.classList.remove(Classes.TILE.SELECTED)
-    next!.classList.add(Classes.TILE.SELECTED)
+        let nextParent = null
+        if (direction === 'Down') {
+            nextParent = parent.nextElementSibling
+            if (!nextParent) {
+                nextParent = parent.parentElement?.firstElementChild
+            }
+        } else if (direction === 'Up') {
+            nextParent = parent.previousElementSibling
+            if (!nextParent) {
+                nextParent = parent.parentElement?.lastElementChild
+            }
+        }
+
+        next = nextParent!.childNodes.item(index) as Element | null
+    }
+
+    if (next !== null) {
+        selected.classList.remove(Classes.TILE.SELECTED)
+        next.classList.add(Classes.TILE.SELECTED)
+    }
 }
 
 function onNumberInput(num: number) {
+    const selected = getSelectedTile()
 
+    if (!selected) return
 }
 
 export default function onKeyDown(event: KeyboardEvent) {
