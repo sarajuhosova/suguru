@@ -1,6 +1,7 @@
 import { Classes } from "../constants"
-import { getSelectedTile } from "../operation/getters"
-import { checkInput } from "../operation/solution"
+import end from "../reactions/end"
+import { getSelectedTile } from "../reactions/getters"
+import { checkInput, solved, fillOne } from "../reactions/state"
 import { getCellPosition } from "../util"
 
 function onArrowKey(direction: string) {
@@ -42,7 +43,7 @@ function onArrowKey(direction: string) {
     }
 
     if (next !== null) {
-        selected.classList.remove(Classes.TILE.SELECTED, Classes.TILE.ERROR)
+        selected.classList.remove(Classes.TILE.SELECTED)
         next.classList.add(Classes.TILE.SELECTED)
     }
 }
@@ -55,6 +56,10 @@ function onNumberInput(num: number) {
     if (checkInput(num, getCellPosition(selected))) {
         selected.appendChild(document.createTextNode(`${num}`));
         selected.classList.add(Classes.TILE.FILLED)
+        
+        fillOne()
+
+        if (solved()) end()
     } else {
         selected.classList.add(Classes.TILE.ERROR)
     }

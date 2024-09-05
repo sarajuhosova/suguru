@@ -1,8 +1,17 @@
-$blue: #E6FFFF;
-$red: #FFE6FF;
+@import "../colour";
+
+table {
+    margin: auto;
+}
 
 table, td {
     border-collapse: collapse;
+}
+
+.solved {
+    -moz-box-shadow: 0 0 .3em $blue;
+    -webkit-box-shadow: 0 0 .3em $blue;
+    box-shadow: 0 0 .3em $blue;
 }
 
 .tile {
@@ -19,7 +28,7 @@ table, td {
 }
 
 .tile.selected {
-    background-color: $blue;
+    background-color: $light-blue;
 }
 
 .tile.error {
@@ -28,5 +37,5 @@ table, td {
 
 @keyframes error {
     0%   { background-color: $red; }
-    100% { background-color: $blue; }
+    100% { background-color: $light-blue; }
 }

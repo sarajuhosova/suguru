@@ -5,9 +5,9 @@
   "license": "MIT",
   "scripts": {
     "clean": "rm -rf dist",
-    "build": "webpack --mode production && yarn build:cp-public && yarn build:sass",
+    "build": "webpack --mode production && yarn build:cp-public && yarn sass",
     "build:cp-public": "cp -r ./public/** ./dist",
-    "build:sass": "node-sass _sass/ -o dist/css"
+    "sass": "node-sass _sass/ -o dist/css"
   },
   "devDependencies": {
     "ts-loader": "^9.5.1",

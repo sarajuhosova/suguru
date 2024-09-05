@@ -5,5 +5,8 @@ export const Classes = {
         FILLED: 'filled',
         DEFINED: 'defined',
         ERROR: 'error'
+    },
+    SUGURU: {
+        SOLVED: 'solved'
     }
 }

@@ -1,4 +1,7 @@
-import generate from './generator';
 import play from './play';
+import { getSuguruTable } from './play/reactions/getters';
 
-play(generate(4, 5))
+document.getElementById('new-game')?.addEventListener('click', () => {
+    getSuguruTable()!.innerHTML = ''
+    play()
+})

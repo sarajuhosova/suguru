@@ -1,0 +1,29 @@
+@import '../colour.scss';
+
+body {
+    font-family: Avantgarde, "TeX Gyre Adventor", "URW Gothic L", sans-serif;
+
+    padding: 1em;
+    width: 80%;
+    margin: 0 auto;
+
+    font-size: 250%;
+
+    text-align: center;
+}
+
+.menu {
+    margin-top: 1em;
+    padding: .5em 1em;
+
+    border: medium solid black;
+    border-radius: .5em;
+    background-color: white;
+
+    font-size: 1em;
+}
+
+.menu:hover {
+    color: white;
+    background-color: black;
+}

@@ -1,5 +1,4 @@
 import onKeyDown from "./onKeyDown";
-import onClick from "./onClick";
 
 export default function playNavigation() {
     document.addEventListener('animationend', () => {
@@ -10,5 +9,4 @@ export default function playNavigation() {
     })
 
     document.onkeydown = onKeyDown
-    document.onclick = onClick
 }

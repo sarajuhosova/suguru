@@ -1,6 +1,7 @@
 import { Classes } from '../constants';
 import { Frame, Solution } from '../../types';
 import { getSuguruTable } from './getters';
+import onTileClick from '../actions/onClick';
 
 export function prettyPrint(solution: Solution) {
     console.log('+' + solution[0].map(_ => '---').join('+') + '+')
@@ -39,6 +40,7 @@ export default function render(solution: Solution) {
         for (const tile of row) {
             const td = tr.insertCell()
             td.className = Classes.TILE.CLASS
+            td.addEventListener('click', onTileClick)
 
             if (tile.entry !== undefined) {
                 td.classList.add(Classes.TILE.FILLED)
