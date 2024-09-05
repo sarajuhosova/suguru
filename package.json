@@ -6,8 +6,8 @@
   "scripts": {
     "clean": "rm -rf dist",
     "build": "webpack --mode production && yarn build:cp-public && yarn sass",
-    "build:cp-public": "cp -r ./public/** ./dist",
-    "sass": "node-sass _sass/ -o dist/css"
+    "build:cp-public": "cp -r ./dist/** ./public",
+    "sass": "node-sass _sass/ -o public/css"
   },
   "devDependencies": {
     "ts-loader": "^9.5.1",
