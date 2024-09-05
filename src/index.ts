@@ -1,11 +1,13 @@
-import generate from './generator'
-import fromProblem from './solver/converter/fromProblem'
+import generate from "./generator";
 import visualise from './visualise'
 
 console.log('Hello, Suguru!')
 
-const { problem, solution} = generate(4, 5)
+function helloWorld() {
+    document.getElementById("hello-world")!.textContent = "Hello, World!";
+}
 
-visualise(fromProblem(problem).tiles)
-console.log()
+const { solution} = generate(4, 5)
 visualise(solution)
+  
+helloWorld();
