@@ -1,4 +1,4 @@
-import { Position, PositionEntry, PositionMap } from "../types"
+import { Position, PositionEntry, PositionMap } from '../types'
 
 // POSITION -------------------------------------------
 

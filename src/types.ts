@@ -50,6 +50,6 @@ export type Solution = Tile[][]
 // GAME -----------------------------------------------
 
 export type Game = {
-    problem: Problem
+    start: Tile[][]
     solution: Solution
 }

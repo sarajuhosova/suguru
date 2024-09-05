@@ -1,5 +1,5 @@
-import { Definition, Group, Problem, Solution } from "../../types";
-import { PartialSolution } from "../types";
+import { Definition, Group, Problem, Solution } from '../../types';
+import { PartialSolution } from '../types';
 
 export function getGroups(solution: PartialSolution): Group[] {
     const checked: boolean[][] = new Array(solution.tiles.length)

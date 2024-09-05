@@ -1,6 +1,6 @@
-import { deepCopyPositionMap } from "../helper/position"
-import { isUnique } from "../helper/problem"
-import { Group, Definition } from "../types"
+import { deepCopyPositionMap } from '../helper/position'
+import { isUnique } from '../helper/problem'
+import { Group, Definition } from '../types'
 
 function reduceToMinimal(groups: Group[], definition: Definition, target: number) {
     for (var i = 0; i < definition.length; i++) {

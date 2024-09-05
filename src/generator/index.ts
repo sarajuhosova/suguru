@@ -1,8 +1,9 @@
-import solve from "../solver";
-import { getDefinition } from "../solver/converter/toProblem";
-import { Game } from "../types";
-import generateBoard from "./board";
-import generateDefinition from "./definition";
+import solve from '../solver';
+import fromProblem from '../solver/converter/fromProblem';
+import { getDefinition } from '../solver/converter/toProblem';
+import { Game, Problem } from '../types';
+import generateBoard from './board';
+import generateDefinition from './definition';
 
 export default function generate(length: number, width: number): Game {
     var groups = undefined
@@ -15,5 +16,7 @@ export default function generate(length: number, width: number): Game {
         definition = generateDefinition(getDefinition(solution), groups)
     }
 
-    return { problem: { groups: groups!, definition }, solution: solution! }
+    const problem: Problem = { groups: groups!, definition }
+
+    return { start: fromProblem(problem).tiles, solution: solution! }
 }

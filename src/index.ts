@@ -1,13 +1,11 @@
-import generate from "./generator";
-import visualise from './visualise'
+import generate from './generator';
+import visualise from './visualise';
+import prettyPrint from './visualise/console';
 
-console.log('Hello, Suguru!')
+const { start, solution } = generate(4, 5)
 
-function helloWorld() {
-    document.getElementById("hello-world")!.textContent = "Hello, World!";
-}
+const table = document.getElementById('suguru')! as HTMLTableElement
 
-const { solution} = generate(4, 5)
-visualise(solution)
-  
-helloWorld();
+visualise(start, table)
+
+prettyPrint(start)

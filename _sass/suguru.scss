@@ -1,0 +1,16 @@
+table, td {
+    border-collapse: collapse;
+}
+
+.tile {
+    height: 2em;
+    width: 2em;
+
+    text-align: center;
+
+    border: black solid thin;
+}
+
+.tile.defined {
+    font-weight: bold;
+}

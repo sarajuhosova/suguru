@@ -1,18 +1,28 @@
-import {  Solution } from '../types'
+import { Frame, Solution } from '../types';
 
-export default function visualise(solution: Solution) {
-    console.log('+' + solution[0].map(_ => '---').join('+') + '+')
+function setFrame(td: HTMLTableCellElement, frame: Frame) {
+    if (frame.up) td.style.borderTop = 'black solid medium'
+    if (frame.right) td.style.borderRight = 'black solid medium'
+    if (frame.down) td.style.borderBottom = 'black solid medium'
+    if (frame.left) td.style.borderLeft = 'black solid medium'
+}
 
+export default function visualise(solution: Solution, table: HTMLTableElement) {
     for (const row of solution) {
-        let data = '|'
-        let line = '+'
+        const tr = table.insertRow()
 
         for (const tile of row) {
-            data += ' ' + ((!tile.entry) ? '_' : tile.entry) + ' ' + ((tile.frame.right) ? '|' : ' ')
-            line += ((tile.frame.down) ? '---' : '   ') + '+'
-        }
+            const td = tr.insertCell()
+            td.className = 'tile'
 
-        console.log(data)
-        console.log(line)
+            if (tile.entry !== undefined) {
+                if (tile.defined) {
+                    td.classList.add('defined') 
+                }
+                td.appendChild(document.createTextNode(`${tile.entry}`));
+            }
+
+            setFrame(td, tile.frame)
+        }
     }
 }

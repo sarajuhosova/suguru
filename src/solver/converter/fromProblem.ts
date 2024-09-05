@@ -1,9 +1,9 @@
-import { calculateDimensions, calculateFrame, findGroup } from "../../helper/board"
-import { findByPosition, getByPosition } from "../../helper/position"
-import { getSurroundingEntries } from "../../helper/tile"
-import { shuffle } from "../../helper/util"
-import { Position, Group, Problem, PositionMap } from "../../types"
-import { PartialSolution, PartialTile } from "../types"
+import { calculateDimensions, calculateFrame, findGroup } from '../../helper/board'
+import { findByPosition, getByPosition } from '../../helper/position'
+import { getSurroundingEntries } from '../../helper/tile'
+import { shuffle } from '../../helper/util'
+import { Position, Group, Problem, PositionMap } from '../../types'
+import { PartialSolution, PartialTile } from '../types'
 
 type PartialTiles = PartialTile[][]
 

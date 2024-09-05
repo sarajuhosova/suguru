@@ -1,4 +1,4 @@
-import { Group } from "../types";
+import { Group } from '../types';
 
 export default function generateBoard(length: number, width: number): Group[] {
     return [
