@@ -3,6 +3,7 @@ export const Classes = {
         CLASS: 'tile',
         SELECTED: 'selected',
         FILLED: 'filled',
-        DEFINED: 'defined'
+        DEFINED: 'defined',
+        ERROR: 'error'
     }
 }

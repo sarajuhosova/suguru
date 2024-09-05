@@ -1,5 +1,7 @@
 import { Classes } from "../constants"
-import { getSelectedTile } from "../getters"
+import { getSelectedTile } from "../operation/getters"
+import { checkInput } from "../operation/solution"
+import { getCellPosition } from "../util"
 
 function onArrowKey(direction: string) {
     const selected = getSelectedTile()
@@ -40,7 +42,7 @@ function onArrowKey(direction: string) {
     }
 
     if (next !== null) {
-        selected.classList.remove(Classes.TILE.SELECTED)
+        selected.classList.remove(Classes.TILE.SELECTED, Classes.TILE.ERROR)
         next.classList.add(Classes.TILE.SELECTED)
     }
 }
@@ -48,7 +50,14 @@ function onArrowKey(direction: string) {
 function onNumberInput(num: number) {
     const selected = getSelectedTile()
 
-    if (!selected) return
+    if (!selected || selected.classList.contains(Classes.TILE.FILLED)) return
+
+    if (checkInput(num, getCellPosition(selected))) {
+        selected.appendChild(document.createTextNode(`${num}`));
+        selected.classList.add(Classes.TILE.FILLED)
+    } else {
+        selected.classList.add(Classes.TILE.ERROR)
+    }
 }
 
 export default function onKeyDown(event: KeyboardEvent) {

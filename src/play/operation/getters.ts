@@ -1,4 +1,4 @@
-import { Classes } from "./constants"
+import { Classes } from "../constants"
 
 function as<S, T>(input: S | undefined): T | undefined {
     return (!input) ? undefined : input as T

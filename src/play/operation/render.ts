@@ -1,6 +1,6 @@
 import { Classes } from '../constants';
 import { Frame, Solution } from '../../types';
-import { getSuguruTable } from '../getters';
+import { getSuguruTable } from './getters';
 
 export function prettyPrint(solution: Solution) {
     console.log('+' + solution[0].map(_ => '---').join('+') + '+')

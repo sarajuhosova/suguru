@@ -1,7 +1,7 @@
 import { Game } from "../types";
-import onKeyDown from "./operation/onKeyDown";
+import playNavigation from "./navigation";
 import render from "./operation/render";
-import { setSolution } from "./solution";
+import { setSolution } from "./operation/solution";
 
 export default function play(game: Game) {
     // set the solution to a new state
@@ -10,6 +10,6 @@ export default function play(game: Game) {
     // render the starting board
     render(game.start)
 
-    // make sure the keys start moving the board around
-    document.onkeydown = onKeyDown
+    // make sure the navigation works
+    playNavigation()
 }
