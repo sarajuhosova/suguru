@@ -4,10 +4,10 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "clean": "rm -rf dist",
-    "build": "webpack --mode production && yarn build:cp-public && yarn sass",
-    "build:cp-public": "cp -r ./dist/** ./public",
-    "sass": "node-sass _sass/ -o public/css"
+    "clean": "rm -rf _site && mkdir _site",
+    "build": "webpack --mode production && yarn clean && yarn build:cp",
+    "build:cp": "cp -r ./dist/** ./_site && cp -r ./public/** ./_site && yarn sass",
+    "sass": "node-sass _sass/ -o _site/css"
   },
   "devDependencies": {
     "ts-loader": "^9.5.1",
